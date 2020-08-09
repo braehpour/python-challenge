@@ -5,16 +5,16 @@ file_path = os.path.join("Resources", "budget_data.csv")
 
 with open(file_path) as csvFile:
     csvReader = csv.reader(csvFile)
-    totalMonths = -1
+    totalMonths = 0
     totalProfitLoss = 0
     currentIncrease = 0
     currentDecrease = 0
 
     for row in csvReader:
-        totalMonths = totalMonths + 1                           #store the value for total months
-    #print(totalMonths)
 
         for col in csvReader:
+            totalMonths = totalMonths + 1                       #store the value for total months
+        #print(totalMonths)
             totalProfitLoss += (int (col[1]))                   #store the value for total profit loss
         #print(totalProfitLoss)
 
@@ -25,4 +25,8 @@ with open(file_path) as csvFile:
             if (int (col[1])) < currentDecrease:
                 currentDecrease = (int (col[1]))                #store the greatest decrease value
         #print(currentDecrease)
-        
+    
+    print(totalMonths)
+    print(totalProfitLoss)
+    print(currentIncrease)
+    print(currentDecrease)
