@@ -3,41 +3,45 @@ import os
 
 file_path = os.path.join("Resources", "budget_data.csv")
 
+totalMonths = 0
+totalProfitLosses = 0
+greatestIncrease = 0
+greatestDecrease = 0
+greatestIncreaseDate = ""
+greatestDecreaseDate = ""
+avgChange = 0
+profitList = []
+
 with open(file_path, 'r') as csvFile:
-    csvReader = csv.reader(csvFile)
-    totalMonths = 0
-    totalProfitLoss = 0
-    currentIncrease = 0
-    currentDecrease = 0
-    totalChange = 0
-
+    csvReader = csv.DictReader(csvFile)
     for row in csvReader:
+        totalMonths = totalMonths + 1
+        totalProfitLosses = totalProfitLosses + int(row['Profit/Losses'])
+        if greatestIncrease < int(row['Profit/Losses']):
+            greatestIncrease = int(row['Profit/Losses'])
+            greatestIncreaseDate = row['Date']
+        
+        if greatestDecrease > int(row['Profit/Losses']):
+            greatestDecrease = int(row['Profit/Losses'])
+            greatestDecreaseDate = row['Date']
 
-        for col in csvReader:
+        profitList.append(int(row['Profit/Losses']))
+        avgChange = sum(profitList)/len(profitList)
+    
 
-            totalMonths = totalMonths + 1                       #store the value for total months
-        #print(totalMonths)
 
-            totalProfitLoss += (int (col[1]))                   #store the value for total profit loss
-        #print(totalProfitLoss)
 
-            if (int (col[1])) > currentIncrease:
-                currentIncrease = (int (col[1]))                #store the greatest increase value
-                
-        #print(currentIncrease)
 
-            if (int (col[1])) < currentDecrease:
-                currentDecrease = (int (col[1]))                #store the greatest decrease value
-        #print(currentDecrease)
+output = f'''
+Financial Analysis
+----------------------------
+Total Months: {totalMonths}
+Total: ${totalProfitLosses}
+Average  Change: ${avgChange:.02f}
+Greatest Increase in Profits: {greatestIncreaseDate} (${greatestIncrease})
+Greatest Decrease in Profits: {greatestDecreaseDate} (${greatestDecrease})
+'''
+print(output)
 
-    #print(totalMonths)
-    #print(totalProfitLoss)
-    #print(currentIncrease)
-    #print(currentDecrease)
-
-print("Financial Analysis")
-print("----------------------------")
-print("Total Months: ", totalMonths)
-print("Average Change: ")
-print("Greatest Increase in Profits: ", currentIncrease)
-print("Greatest Decrease in Profits: ", currentDecrease)
+with open('pyBank_Output.txt', 'w') as outputFile:
+    outputFile.write(output)
